@@ -1,10 +1,12 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react'
+import { UseTodoContext } from '../../store/todo-context'
 
 const AddTodo = () => {
   const [todoState, setTodoState] = useState({
     title: '',
-    time: '',
+    schedule: '',
   })
+  const { addNewTodo } = UseTodoContext()
 
   const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name
@@ -18,9 +20,16 @@ const AddTodo = () => {
     })
   }
 
-  const submitHandler = (event: FormEvent) => {
+  const submitHandler = async (event: FormEvent) => {
     event.preventDefault()
-    console.log(todoState)
+    // console.log(todoState)
+    const response = await fetch('http://localhost:3000/api/todo', {
+      method: 'POST',
+      body: JSON.stringify(todoState),
+    })
+    const data = await response.json()
+
+    addNewTodo(data)
   }
 
   return (
@@ -36,9 +45,9 @@ const AddTodo = () => {
             placeholder='Enter Todo Title'
           />
           <input
-            name='time'
+            name='schedule'
             type='time'
-            value={todoState.time}
+            value={todoState.schedule}
             onChange={changeHandler}
             className='px-3 py-2 rounded-lg border-2'
           />

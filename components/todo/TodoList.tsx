@@ -9,7 +9,7 @@ const TodoList = () => {
     <div className='w-full min-h-[400px]'>
       <ul className='flex flex-col w-full '>
         {items.map((todo) => (
-          <TodoItem todo={todo} />
+          <TodoItem todo={todo} key={todo.id} />
         ))}
       </ul>
     </div>

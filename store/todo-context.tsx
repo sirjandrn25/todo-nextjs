@@ -5,7 +5,8 @@ type TodoContextType = {
   items: TodoType[]
   addNewTodo: (item: TodoType) => void
   removeTodo: (todo_id: number) => void
-  editTodo: (todo_id: number) => void
+  editTodo: (item: TodoType) => void
+  fetchAllTodoItems: (todos: TodoType[]) => void
 }
 
 const TodoContext = createContext<TodoContextType>({
@@ -13,6 +14,7 @@ const TodoContext = createContext<TodoContextType>({
   addNewTodo: () => {},
   removeTodo: () => {},
   editTodo: () => {},
+  fetchAllTodoItems: () => {},
 })
 
 type todoContextProps = {
@@ -41,21 +43,34 @@ const dummy_todos = [
 ]
 
 export const TodoContextProvider = ({ children }: todoContextProps) => {
-  const [items, setItems] = useState<TodoType[]>(dummy_todos)
+  const [items, setItems] = useState<TodoType[]>([])
+
+  const fetchAllTodosItems = (todos: TodoType[]) => {
+    setItems(todos)
+  }
 
   const addNewTodo = (item: TodoType) => {
     setItems((prevState) => {
       return [item, ...prevState]
     })
   }
-  const editTodo = (todo_id: number) => {}
-  const removeTodo = (todo_id: number) => {}
+  const editTodo = (item: TodoType) => {
+    setItems((prevState) => {
+      return prevState.map((todo) => (item.id !== todo.id ? todo : item))
+    })
+  }
+  const removeTodo = (todo_id: number) => {
+    setItems((prevState) => {
+      return prevState.filter((todo) => todo.id !== todo_id)
+    })
+  }
 
   const todoContextObj = {
     items,
     addNewTodo,
     editTodo,
     removeTodo,
+    fetchAllTodosItems,
   }
   return <TodoContext.Provider value={todoContextObj}>{children}</TodoContext.Provider>
 }
