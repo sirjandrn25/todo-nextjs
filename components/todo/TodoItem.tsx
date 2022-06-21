@@ -2,6 +2,7 @@ import React, { ChangeEvent, useState } from 'react'
 import CheckBox from '../UI/CheckBox'
 import { TodoType } from '../../models/todo'
 import { UseTodoContext } from '../../store/todo-context'
+import axios from 'axios'
 
 type todoItemProps = {
   todo: TodoType
@@ -14,12 +15,22 @@ const TodoItem = ({ todo }: todoItemProps) => {
   const changeHandler = async (event: ChangeEvent<HTMLInputElement>) => {
     setIsComplete(event.target.checked)
 
-    const response = await fetch(`/api/todo/${todo.id}`, {
+    // const response = await fetch(`/api/todo/${todo.id}`, {
+    //   method: 'PUT',
+    //   body: JSON.stringify({ is_complete: event.target.checked }),
+    // })
+    // const data = await response.json()
+    const response = await axios({
+      url: `/api/todo/${todo.id}`,
       method: 'PUT',
-      body: JSON.stringify({ is_complete: event.target.checked }),
+      data: { ...todo, is_complete: event.target.checked },
     })
-    const data = await response.json()
-    console.log(data)
+      .then((resp) => {
+        console.log(resp)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
 
     // console.log(event.target.checked)
   }

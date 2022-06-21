@@ -3,4 +3,5 @@ export type TodoType = {
   title: string
   is_complete?: boolean
   schedule: string
+  user?: number
 }
